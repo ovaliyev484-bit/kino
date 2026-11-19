@@ -1,0 +1,1 @@
+worker: python kino_bot_instagram_obuna_tuzatilgan.py
