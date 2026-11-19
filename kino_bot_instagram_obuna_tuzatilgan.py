@@ -31,14 +31,14 @@ from telegram.ext import (
 # 3. SOZLAMALAR
 # ==================================================
 
-TOKEN = os.getenv("TELEGRAM_BOT_TOKEN", "YANGI_BOTFATHER_TOKENINI_BU_YERGA_QOYING")
+TOKEN = (os.getenv("TELEGRAM_BOT_TOKEN") or "").strip()
 
 try:
-    ADMIN_ID = int(os.getenv("ADMIN_ID", "123456789"))
+    ADMIN_ID = int((os.getenv("ADMIN_ID") or "123456789").strip())
 except ValueError:
-    raise ValueError(".env faylidagi ADMIN_ID faqat raqamlardan iborat bo'lishi kerak")
+    raise ValueError("ADMIN_ID faqat raqamli Telegram ID bo'lishi kerak")
 
-DB_NAME = os.getenv("DB_NAME", "kinolar.db")
+DB_NAME = os.getenv("DB_NAME", "kinolar.db").strip() or "kinolar.db"
 
 if os.path.dirname(DB_NAME):
     os.makedirs(os.path.dirname(DB_NAME), exist_ok=True)
@@ -601,12 +601,16 @@ def main():
 
     if (
         not TOKEN
-        or TOKEN == "YANGI_BOTFATHER_TOKENINI_BU_YERGA_QOYING"
-        or TOKEN == "SIZNING_BOT_TOKENINGIZ"
+        or TOKEN in {
+            "YANGI_BOTFATHER_TOKENINI_BU_YERGA_QOYING",
+            "SIZNING_BOT_TOKENINGIZ",
+            "123456789:ABCdefGhIJKlmNoP",
+        }
         or ":" not in TOKEN
+        or not TOKEN.split(":", 1)[0].isdigit()
     ):
         raise ValueError(
-            "Haqiqiy TELEGRAM_BOT_TOKEN qiymatini kiriting. "
+            "Railway Variables bo'limida haqiqiy TELEGRAM_BOT_TOKEN qo'ying. "
             "BotFather tokeni odatda '123456789:ABC...' ko'rinishida bo'ladi."
         )
 
